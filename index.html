@@ -230,24 +230,40 @@ const THEMES = [
 const app = document.getElementById('app');
 const navLinks = document.querySelectorAll('[data-nav]');
 
-function route(){
-  const hash = location.hash.replace('#','') || 'home';
-  const parts = hash.split('/');
-  const page = parts[0];
-  const param = parts[1];
-
-  navLinks.forEach(a=>a.classList.toggle('active', a.dataset.nav === (page==='school'?'schools':page)));
-
-  if(page==='home') renderHome();
-  else if(page==='schools') renderSchools(param||'');
-  else if(page==='school') renderSchoolDetail(param);
-  else if(page==='essays') renderEssays(param||'');
-  else if(page==='essay') renderEssayDetail(parseInt(param));
-  else renderHome();
+function getHashParams(extra){
+  const raw = extra || location.hash.replace('#','') || '';
+  const idx = raw.indexOf('/');
+  if(idx<0) return {page:raw||'home', param:''};
+  return {page:raw.slice(0,idx), param:raw.slice(idx+1)};
 }
 
+function route(e){
+  if(e && e.preventDefault) e.preventDefault();
+  const {page, param} = getHashParams();
+  navLinks.forEach(a=>a.classList.toggle('active', a.dataset.nav === (page==='school'?'schools':page)));
+  try{
+    if(page==='home') renderHome();
+    else if(page==='schools') renderSchools(param);
+    else if(page==='school') renderSchoolDetail(param);
+    else if(page==='essays') renderEssays(param);
+    else if(page==='essay') renderEssayDetail(parseInt(param));
+    else renderHome();
+  }catch(err){app.innerHTML='<p style="padding:40px;color:var(--dim)">页面加载出错，请刷新重试。</p>';console.error(err);}
+}
+
+// Click handlers on ALL hash links (more reliable than hashchange alone)
+document.addEventListener('click',function(e){
+  const a = e.target.closest('a[href^="#"]');
+  if(!a) return;
+  const href = a.getAttribute('href');
+  if(href==='#') return;
+  e.preventDefault();
+  location.hash = href;
+  route(e);
+});
+
 window.addEventListener('hashchange',route);
-window.addEventListener('load',route);
+window.addEventListener('DOMContentLoaded',route);
 
 // ==============================
 // HOME
@@ -296,22 +312,23 @@ function renderHome(){
 // ==============================
 // SCHOOL LIST
 // ==============================
+function parseQuery(qs){
+  const result = {};
+  (qs||'').split('&').forEach(p=>{
+    const eq = p.indexOf('=');
+    if(eq>0) result[p.slice(0,eq)] = decodeURIComponent(p.slice(eq+1));
+  });
+  return result;
+}
+
 function renderSchools(filterQuery){
   // Parse filter from query string
-  let searchTerm = '';
-  let regionFilter = 'all';
-  let typeFilter = 'all';
-  let arFilter = 'all';
-  let sortBy = 'name';
-
-  if(filterQuery){
-    const params = new URLSearchParams(filterQuery);
-    searchTerm = params.get('q')||'';
-    regionFilter = params.get('region')||'all';
-    typeFilter = params.get('type')||'all';
-    arFilter = params.get('ar')||'all';
-    sortBy = params.get('sort')||'name';
-  }
+  const q = parseQuery(filterQuery);
+  let searchTerm = q.q || '';
+  let regionFilter = q.region || 'all';
+  let typeFilter = q.type || 'all';
+  let arFilter = q.ar || 'all';
+  let sortBy = q.sort || 'name';
 
   let schools = [...SCHOOLS];
 
@@ -450,16 +467,10 @@ ${schoolEssays.length===0?'<p style="color:var(--dim);margin-top:16px">该学校
 // ESSAY LIST
 // ==============================
 function renderEssays(filterQuery){
-  let searchTerm = '';
-  let themeFilter = 'all';
-  let schoolFilter = 'all';
-
-  if(filterQuery){
-    const params = new URLSearchParams(filterQuery);
-    searchTerm = params.get('q')||'';
-    themeFilter = params.get('theme')||'all';
-    schoolFilter = params.get('school')||'all';
-  }
+  const q = parseQuery(filterQuery);
+  let searchTerm = q.q || '';
+  let themeFilter = q.theme || 'all';
+  let schoolFilter = q.school || 'all';
 
   let essays = [...ESSAYS];
 
