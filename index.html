@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>升导 — 美国大学申请数据 & 文书库</title>
+<style>
+:root {
+  --bg: #f8f9fb; --surface: #fff; --border: #e5e7eb;
+  --text: #1f2937; --dim: #6b7280; --accent: #2563eb; --accent-light: #eff6ff;
+  --green: #059669; --red: #dc2626; --amber: #d97706;
+  --radius: 10px; --shadow: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+button{cursor:pointer;font-family:inherit}
+input,select{font-family:inherit;font-size:14px;padding:8px 12px;border:1px solid var(--border);border-radius:6px;outline:none}
+input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+
+/* Layout */
+header{background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
+.nav{max-width:1200px;margin:0 auto;padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-size:20px;font-weight:700;color:var(--text)}
+.logo span{color:var(--accent)}
+.nav-links{display:flex;gap:24px}
+.nav-links a{color:var(--dim);font-size:14px;font-weight:500;transition:color .2s}
+.nav-links a:hover,.nav-links a.active{color:var(--accent);text-decoration:none}
+main{max-width:1200px;margin:0 auto;padding:32px 24px}
+
+/* Cards */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow)}
+.card:hover{box-shadow:0 4px 12px rgba(0,0,0,.08)}
+
+/* Buttons */
+.btn{padding:10px 20px;border-radius:6px;font-size:14px;font-weight:600;border:none;transition:all .2s}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:#1d4ed8}
+.btn-outline{background:var(--surface);color:var(--accent);border:1px solid var(--accent)}
+.btn-outline:hover{background:var(--accent-light)}
+.btn-sm{padding:6px 12px;font-size:13px}
+
+/* Tags */
+.tag{display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:500}
+.tag-blue{background:#dbeafe;color:#1e40af}
+.tag-green{background:#d1fae5;color:#065f46}
+.tag-amber{background:#fef3c7;color:#92400e}
+.tag-red{background:#fee2e2;color:#991b1b}
+
+/* Home */
+.hero{text-align:center;padding:60px 24px}
+.hero h1{font-size:36px;font-weight:800;margin-bottom:12px}
+.hero p{font-size:18px;color:var(--dim);max-width:600px;margin:0 auto 32px;line-height:1.7}
+.hero-actions{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.hero-card{display:flex;align-items:flex-start;gap:16px;text-align:left}
+.hero-card .icon{font-size:28px}
+.hero-card h3{font-size:16px;margin-bottom:4px}
+.hero-card p{font-size:14px;color:var(--dim);margin:0}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px;margin-top:48px}
+
+/* Filters */
+.filter-bar{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:24px}
+.filter-bar input{flex:1;min-width:200px}
+.filter-bar select{min-width:140px}
+.result-count{font-size:14px;color:var(--dim)}
+
+/* School cards grid */
+.school-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px}
+.school-card h3{font-size:17px;margin-bottom:4px}
+.school-card .location{font-size:13px;color:var(--dim);margin-bottom:12px}
+.school-card .stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13px}
+.school-card .stats .stat-label{color:var(--dim)}
+.school-card .stats .stat-value{font-weight:600}
+.school-card .tags{margin-top:12px;display:flex;gap:6px;flex-wrap:wrap}
+
+/* Detail page */
+.breadcrumb{font-size:14px;color:var(--dim);margin-bottom:24px}
+.breadcrumb a{color:var(--dim)}
+.detail-header{margin-bottom:32px}
+.detail-header h1{font-size:28px;margin-bottom:4px}
+.detail-header .sub{font-size:15px;color:var(--dim)}
+.detail-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-bottom:32px}
+.detail-grid .stat{background:var(--bg);padding:14px;border-radius:8px;text-align:center}
+.detail-grid .stat .val{font-size:24px;font-weight:700;color:var(--accent)}
+.detail-grid .stat .lbl{font-size:12px;color:var(--dim);margin-top:4px}
+.section-title{font-size:18px;font-weight:700;margin:32px 0 16px;padding-bottom:8px;border-bottom:2px solid var(--accent)}
+
+/* Essays */
+.essay-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px}
+.essay-card h3{font-size:16px;margin-bottom:6px}
+.essay-card .meta{font-size:13px;color:var(--dim);margin-bottom:8px}
+.essay-preview{font-size:14px;color:var(--dim);line-height:1.6;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.theme-filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+
+/* Essay detail */
+.essay-detail h1{font-size:26px;margin-bottom:8px}
+.essay-detail .meta{color:var(--dim);margin-bottom:24px;font-size:14px}
+.essay-content{font-size:15px;line-height:1.9;white-space:pre-wrap;margin-bottom:32px}
+.analysis-box{background:var(--accent-light);border-left:3px solid var(--accent);padding:20px;border-radius:0 var(--radius) var(--radius) 0;margin-bottom:24px}
+.analysis-box h3{font-size:15px;color:var(--accent);margin-bottom:8px}
+.analysis-box p{font-size:14px;line-height:1.8;color:var(--text)}
+
+/* Responsive */
+@media(max-width:768px){
+  .hero h1{font-size:26px}
+  .hero-actions{flex-direction:column;align-items:stretch}
+  .school-grid,.essay-grid{grid-template-columns:1fr}
+  .nav-links{gap:12px}
+}
+</style>
+</head>
+<body>
+
+<header>
+<nav class="nav">
+  <a href="#home" class="logo"><span>升</span>导</a>
+  <div class="nav-links">
+    <a href="#schools" data-nav="schools">学校检索</a>
+    <a href="#essays" data-nav="essays">文书库</a>
+  </div>
+</nav>
+</header>
+
+<main id="app"></main>
+
+<script>
+// ==============================
+// DATA
+// ==============================
+const SCHOOLS = [
+  {id:"harvard",name:"Harvard University",location:"Cambridge, MA",region:"Northeast",type:"Private",acceptanceRate:3.4,sat25:1500,sat75:1580,act25:34,act75:36,undergradSize:7934,tuition:57261,
+   cds:{earlyDecision:false,earlyAction:true,edDeadline:"—",eaDeadline:"11/1",rdDeadline:"1/1",avgGPA:4.18,classRankTop10:93,intlPct:14.6,retentionRate:97,gradRate:98}},
+  {id:"stanford",name:"Stanford University",location:"Stanford, CA",region:"West",type:"Private",acceptanceRate:3.7,sat25:1500,sat75:1570,act25:33,act75:35,undergradSize:8049,tuition:58746,
+   cds:{earlyDecision:false,earlyAction:true,edDeadline:"—",eaDeadline:"11/1",rdDeadline:"1/5",avgGPA:4.18,classRankTop10:96,intlPct:12.5,retentionRate:98,gradRate:96}},
+  {id:"mit",name:"Massachusetts Institute of Technology",location:"Cambridge, MA",region:"Northeast",type:"Private",acceptanceRate:4.0,sat25:1520,sat75:1580,act25:35,act75:36,undergradSize:4657,tuition:57986,
+   cds:{earlyDecision:false,earlyAction:true,edDeadline:"—",eaDeadline:"11/1",rdDeadline:"1/5",avgGPA:4.19,classRankTop10:97,intlPct:11.0,retentionRate:99,gradRate:96}},
+  {id:"yale",name:"Yale University",location:"New Haven, CT",region:"Northeast",type:"Private",acceptanceRate:4.5,sat25:1480,sat75:1560,act25:33,act75:35,undergradSize:6645,tuition:62250,
+   cds:{earlyDecision:false,earlyAction:true,edDeadline:"—",eaDeadline:"11/1",rdDeadline:"1/2",avgGPA:4.14,classRankTop10:95,intlPct:11.8,retentionRate:99,gradRate:98}},
+  {id:"princeton",name:"Princeton University",location:"Princeton, NJ",region:"Northeast",type:"Private",acceptanceRate:4.2,sat25:1490,sat75:1580,act25:33,act75:35,undergradSize:5604,tuition:57410,
+   cds:{earlyDecision:false,earlyAction:true,edDeadline:"—",eaDeadline:"11/1",rdDeadline:"1/1",avgGPA:4.16,classRankTop10:94,intlPct:13.2,retentionRate:98,gradRate:98}},
+  {id:"columbia",name:"Columbia University",location:"New York, NY",region:"Northeast",type:"Private",acceptanceRate:3.9,sat25:1500,sat75:1560,act25:34,act75:35,undergradSize:8832,tuition:65524,
+   cds:{earlyDecision:true,earlyAction:false,edDeadline:"11/1",eaDeadline:"—",rdDeadline:"1/1",avgGPA:4.15,classRankTop10:95,intlPct:16.8,retentionRate:98,gradRate:97}},
+  {id:"uchicago",name:"University of Chicago",location:"Chicago, IL",region:"Midwest",type:"Private",acceptanceRate:5.0,sat25:1510,sat75:1580,act25:34,act75:35,undergradSize:7636,tuition:63963,
+   cds:{earlyDecision:true,earlyAction:true,edDeadline:"11/1",eaDeadline:"11/1",rdDeadline:"1/2",avgGPA:4.17,classRankTop10:93,intlPct:13.8,retentionRate:99,gradRate:96}},
+  {id:"upenn",name:"University of Pennsylvania",location:"Philadelphia, PA",region:"Northeast",type:"Private",acceptanceRate:5.7,sat25:1490,sat75:1560,act25:34,act75:35,undergradSize:10618,tuition:63452,
+   cds:{earlyDecision:true,earlyAction:false,edDeadline:"11/1",eaDeadline:"—",rdDeadline:"1/5",avgGPA:4.13,classRankTop10:93,intlPct:13.8,retentionRate:98,gradRate:97}},
+  {id:"duke",name:"Duke University",location:"Durham, NC",region:"South",type:"Private",acceptanceRate:6.0,sat25:1480,sat75:1560,act25:33,act75:35,undergradSize:6883,tuition:62993,
+   cds:{earlyDecision:true,earlyAction:false,edDeadline:"11/1",eaDeadline:"—",rdDeadline:"1/2",avgGPA:4.13,classRankTop10:92,intlPct:11.5,retentionRate:98,gradRate:97}},
+  {id:"northwestern",name:"Northwestern University",location:"Evanston, IL",region:"Midwest",type:"Private",acceptanceRate:7.0,sat25:1470,sat75:1550,act25:33,act75:35,undergradSize:8659,tuition:63468,
+   cds:{earlyDecision:true,earlyAction:false,edDeadline:"11/1",eaDeadline:"—",rdDeadline:"1/3",avgGPA:4.11,classRankTop10:91,intlPct:10.5,retentionRate:98,gradRate:96}},
+  {id:"dartmouth",name:"Dartmouth College",location:"Hanover, NH",region:"Northeast",type:"Private",acceptanceRate:6.2,sat25:1440,sat75:1560,act25:32,act75:35,undergradSize:4458,tuition:62430,
+   cds:{earlyDecision:true,earlyAction:false,edDeadline:"11/1",eaDeadline:"—",rdDeadline:"1/2",avgGPA:4.11,classRankTop10:90,intlPct:10.0,retentionRate:98,gradRate:96}},
+  {id:"brown",name:"Brown University",location:"Providence, RI",region:"Northeast",type:"Private",acceptanceRate:5.1,sat25:1460,sat75:1560,act25:33,act75:35,undergradSize:7639,tuition:65146,
+   cds:{earlyDecision:true,earlyAction:false,edDeadline:"11/1",eaDeadline:"—",rdDeadline:"1/5",avgGPA:4.12,classRankTop10:92,intlPct:12.0,retentionRate:98,gradRate:97}},
+  {id:"cornell",name:"Cornell University",location:"Ithaca, NY",region:"Northeast",type:"Private",acceptanceRate:7.3,sat25:1450,sat75:1550,act25:33,act75:35,undergradSize:15688,tuition:63200,
+   cds:{earlyDecision:true,earlyAction:false,edDeadline:"11/1",eaDeadline:"—",rdDeadline:"1/2",avgGPA:4.08,classRankTop10:85,intlPct:10.8,retentionRate:97,gradRate:95}},
+  {id:"ucberkeley",name:"UC Berkeley",location:"Berkeley, CA",region:"West",type:"Public",acceptanceRate:11.4,sat25:1300,sat75:1530,act25:29,act75:35,undergradSize:32831,tuition:43980,
+   cds:{earlyDecision:false,earlyAction:false,edDeadline:"—",eaDeadline:"—",rdDeadline:"11/30",avgGPA:4.15,classRankTop10:82,intlPct:13.2,retentionRate:97,gradRate:93}},
+  {id:"ucla",name:"UCLA",location:"Los Angeles, CA",region:"West",type:"Public",acceptanceRate:8.6,sat25:1360,sat75:1530,act25:31,act75:35,undergradSize:32423,tuition:44467,
+   cds:{earlyDecision:false,earlyAction:false,edDeadline:"—",eaDeadline:"—",rdDeadline:"11/30",avgGPA:4.18,classRankTop10:82,intlPct:9.5,retentionRate:97,gradRate:92}},
+  {id:"nyu",name:"New York University",location:"New York, NY",region:"Northeast",type:"Private",acceptanceRate:8.0,sat25:1470,sat75:1560,act25:33,act75:35,undergradSize:29401,tuition:58168,
+   cds:{earlyDecision:true,earlyAction:false,edDeadline:"11/1",eaDeadline:"—",rdDeadline:"1/5",avgGPA:3.81,classRankTop10:68,intlPct:24.6,retentionRate:95,gradRate:88}},
+  {id:"umich",name:"University of Michigan",location:"Ann Arbor, MI",region:"Midwest",type:"Public",acceptanceRate:17.7,sat25:1350,sat75:1530,act25:31,act75:34,undergradSize:32695,tuition:55572,
+   cds:{earlyDecision:false,earlyAction:true,edDeadline:"—",eaDeadline:"11/1",rdDeadline:"2/1",avgGPA:3.90,classRankTop10:70,intlPct:9.0,retentionRate:97,gradRate:93}},
+  {id:"gtown",name:"Georgetown University",location:"Washington, DC",region:"South",type:"Private",acceptanceRate:12.0,sat25:1410,sat75:1550,act25:32,act75:35,undergradSize:7484,tuition:62052,
+   cds:{earlyDecision:false,earlyAction:true,edDeadline:"—",eaDeadline:"11/1",rdDeadline:"1/10",avgGPA:4.09,classRankTop10:86,intlPct:11.5,retentionRate:97,gradRate:95}},
+  {id:"cmu",name:"Carnegie Mellon University",location:"Pittsburgh, PA",region:"Northeast",type:"Private",acceptanceRate:11.0,sat25:1490,sat75:1560,act25:34,act75:35,undergradSize:7509,tuition:61344,
+   cds:{earlyDecision:true,earlyAction:false,edDeadline:"11/1",eaDeadline:"—",rdDeadline:"1/3",avgGPA:3.91,classRankTop10:80,intlPct:20.5,retentionRate:97,gradRate:92}},
+  {id:"vanderbilt",name:"Vanderbilt University",location:"Nashville, TN",region:"South",type:"Private",acceptanceRate:5.6,sat25:1490,sat75:1560,act25:34,act75:35,undergradSize:7151,tuition:60348,
+   cds:{earlyDecision:true,earlyAction:false,edDeadline:"11/1",eaDeadline:"—",rdDeadline:"1/1",avgGPA:4.10,classRankTop10:91,intlPct:10.2,retentionRate:97,gradRate:94}},
+  {id:"usc",name:"University of Southern California",location:"Los Angeles, CA",region:"West",type:"Private",acceptanceRate:10.0,sat25:1410,sat75:1550,act25:32,act75:35,undergradSize:20699,tuition:64726,
+   cds:{earlyDecision:false,earlyAction:true,edDeadline:"—",eaDeadline:"11/1",rdDeadline:"1/15",avgGPA:3.88,classRankTop10:78,intlPct:16.5,retentionRate:96,gradRate:92}},
+  {id:"notredame",name:"University of Notre Dame",location:"Notre Dame, IN",region:"Midwest",type:"Private",acceptanceRate:12.9,sat25:1410,sat75:1550,act25:32,act75:35,undergradSize:8973,tuition:60301,
+   cds:{earlyDecision:false,earlyAction:true,edDeadline:"—",eaDeadline:"11/1",rdDeadline:"1/1",avgGPA:4.07,classRankTop10:82,intlPct:8.5,retentionRate:98,gradRate:96}},
+  {id:"emory",name:"Emory University",location:"Atlanta, GA",region:"South",type:"Private",acceptanceRate:13.0,sat25:1380,sat75:1530,act25:31,act75:34,undergradSize:7443,tuition:57948,
+   cds:{earlyDecision:true,earlyAction:false,edDeadline:"11/1",eaDeadline:"—",rdDeadline:"1/1",avgGPA:3.92,classRankTop10:75,intlPct:14.2,retentionRate:95,gradRate:91}},
+];
+
+const ESSAYS = [
+  {id:1,title:"The Invisible Bridge",school:"harvard",schoolName:"Harvard University",theme:"community",themeLabel:"社区贡献",author:"匿名",year:2025,
+   content:`我从小在两种语言之间长大——普通话和英语。这个"无形的桥"不是我建造的，而是我从小就站在上面。\n\n高中时，我注意到学校里的 ESL（英语作为第二语言）学生总是沉默地坐在教室后排。没有人给他们翻译，没有人解释那些文化梗。我决定成为那个人。\n\n每周三下午，我在图书馆角落支起一张小桌子，上面放着一块手写的纸牌："需要帮助吗？| Need Help?" 起初只来了两个学生。到第二学期，我的桌子旁围了十五个人。我帮他们改作文、解释俚语、甚至教他们怎么写大学申请文书。\n\n这段经历教会我一件事：桥梁的价值不在于它有多宏伟，而在于有多少人能通过它到达彼岸。`,
+   analysis:"本文巧妙地将「双语成长」转化为「社区领导力」。他没有停留在自己的身份困境，而是主动成为他人的桥梁。从「两个学生」到「十五个人」的数据化呈现增加了说服力。结尾的隐喻回到标题，形成闭环。"},
+  {id:2,title:"Why Harvard",school:"harvard",schoolName:"Harvard University",theme:"why_school",themeLabel:"为什么选择本校",author:"匿名",year:2025,
+   content:`我第一次听说哈佛不是在书上，而是在我爷爷的口中。他是农民，没上过学，但他知道"哈佛"两个字——因为它代表着一个人可以走多远。\n\n但让我决定申请哈佛的不是这个名字，而是我在线上旁听 Michael Sandel 教授「正义」课时的一个瞬间。他在课堂上问："如果你是电车司机，你会扳动道岔吗？" 那个问题让我彻夜未眠。\n\n我想要的不只是一个学位。我想要的是每天都能被这样的问题困扰、被这样的讨论激荡。哈佛的通识教育体系——尤其是 Social Studies 和 History & Literature 两个专业——让我相信我可以在这里同时探索哲学、历史和社会学，而不必过早地把自己的思维关进一个窄小的盒子里。\n\n更重要的是，哈佛的 Institute of Politics 和 Phillips Brooks House 让我看到一个把思想转化为行动的平台。我不只是想学习正义——我想实践它。`,
+   analysis:"这是典型的「Why School」文书范本。它做到了三件事：(1) 个人叙事引入——爷爷的故事给出情感锚点；(2) 具体课程/教授——Sandel 的正义课、Social Studies 专业，显示深入研究；(3) 课外资源——IOP 和 PBH，证明你了解哈佛独特的生态。避免空洞的「哈佛是最好的学校」。"},
+  {id:3,title:"The Weight of Silence",school:"stanford",schoolName:"Stanford University",theme:"challenge",themeLabel:"挑战经历",author:"匿名",year:2025,
+   content:`十六岁那年，我的父亲被诊断出渐冻症（ALS）。\n\n一开始，我以为最难的会是看着他失去行动能力。但真正让我崩溃的，是沉默——我们之间突然有了太多不能说的话。我害怕提到"未来"，因为他的未来正在被蚕食。他害怕成为我的负担，所以假装一切都好。\n\n转折点发生在一个周二的深夜。我在书房复习 SAT，听到客厅传来打字的声音。父亲在用眼球追踪仪写一封信。他用了三个小时，打了三行字："儿子，别怕。你往前走，我在这里看着你。这就是我的幸福。"\n\n那晚我哭了很久，但我再也没有害怕过沉默。我学会了在沉默中倾听——听他用眨眼说「是」，用嘴角的弧度说「我很好」。我也学会了主动打破沉默：我开始每天给他讲学校里发生的事，讲我的梦想，讲我想去 Stanford 学计算机，用代码帮助渐冻症患者沟通。\n\n父亲教会我：真正的勇气不是无视恐惧，而是在恐惧中依然选择前行。`,
+   analysis:"极佳的「克服挑战」类文书。核心技巧：(1) 具体细节——「眼球追踪仪」「三个小时」「三行字」让场景真实可感；(2) 情感克制——没有煽情，用行为代替形容词；(3) 反向成长——不是「我帮了父亲」，而是「父亲教会了我」；(4) 与专业连接——想学 CS 帮助渐冻症患者，把个人经历导向未来目标。"},
+  {id:4,title:"Why Stanford",school:"stanford",schoolName:"Stanford University",theme:"why_school",themeLabel:"为什么选择本校",author:"匿名",year:2025,
+   content:`我至今记得第一次打开斯坦福官网时的感受。不是敬畏，是困惑——为什么这所学校的标语是"让自由之风劲吹"？一所大学为什么要强调「风」？\n\n后来我明白了。风不是方向，是可能性。斯坦福不告诉你该往哪走，它给你整个天空。\n\n我的高中四年一直在计算机和哲学之间摇摆。我喜欢写代码，但我也想知道代码背后的伦理问题。斯坦福的 CS+Ethics 联合项目和 Symbolic Systems 专业是唯一能让我同时做这两件事的地方。我还想去 d.school 探索设计思维，去 Stanford in Government 实习——这些在别的学校可能需要跨学院、跨院系才能实现，在斯坦福它们就在同一片校园里。\n\n更重要的是，斯坦福的创业文化不是关于「赚多少钱」，而是关于「解决什么问题」。这和我对技术的理解完全一致：技术是手段，人是目的。`,
+   analysis:"从「校训困惑」入手的创意开头打破套路。具体提到了 CS+Ethics、Symbolic Systems、d.school、Stanford in Government——四个斯坦福独有的项目/资源，证明你了解这所学校。最后一段把「创业文化」重新定义为「解决问题」，升华了个人价值观。"},
+  {id:5,title:"A Cookbook of Belonging",school:"yale",schoolName:"Yale University",theme:"community",themeLabel:"社区贡献",author:"匿名",year:2025,
+   content:`十岁时，我收到的第一本英文书是一本破旧的烹饪书——《The Joy of Cooking》。\n\n作为一个刚移民到美国的中国孩子，我不认识食谱里一半的单词。但食物的语言是通用的——盐是咸的，糖是甜的，大火和小火不需要翻译。\n\n高中最后一年，我发起了一个叫"Taste of Home"的项目。每个月，一位同学分享一道来自他们文化背景的菜，我们在学校厨房一起做。伊朗的 Ghormeh Sabzi，埃塞俄比亚的 Injera，韩国的 Kimchi Jjigae，巴西的 Pão de Queijo……厨房成了一个不需要护照就能环游世界的地方。\n\n食物只是入口。真正的菜谱是关于「如何让彼此感到被接纳」——多一点好奇心，少一点评判；多一点倾听，少一点假设。\n\n我把每个月的食谱和背后的故事整理成了一本电子书，放在了学校的共享服务器上。书名还是那本：The Joy of Cooking——只是这次，Joy 不是来自食物本身，而是来自一起做饭的人。`,
+   analysis:"文化融合类文书的上乘之作。以「烹饪书」为线索，串联起移民身份、社区建设、跨文化理解三个层次。项目名称「Taste of Home」一语双关。结尾回到十岁的烹饪书形成完美闭环。"},
+  {id:6,title:"The Math of Empathy",school:"mit",schoolName:"MIT",theme:"intellectual",themeLabel:"学术兴趣",author:"匿名",year:2025,
+   content:`大多数人觉得数学和同理心是互斥的——一个是冷冰冰的逻辑，一个是暖暖的情感。但我发现它们有一个共同的核心：都需要你跳出自己的视角。\n\n数学要求你从公理出发，推导出结论，而不是从你的直觉出发。同理心要求你从他人的处境出发，理解他们的感受，而不是从你的经验出发。\n\n高二那年，我用博弈论模型分析了我所在高中「霸凌」现象的动态均衡。我发现：当旁观者干预的成本降低（比如匿名举报系统），霸凌的均衡点会显著移动——即使每个个体的偏好没有变化。我把这个发现写成了论文，并推动学校建立了匿名举报平台。\n\n对数学的热爱让我更理解人，而不是更疏离。因为最好的数学模型，是对人类行为最深刻的洞察。`,
+   analysis:"把「数学」和「同理心」联系起来看似牵强，但作者用「跳出自我视角」作为公分母，论证有力。博弈论分析霸凌的具体案例让抽象概念落地。最后一句是全文的哲学内核，极有力。"},
+  {id:7,title:"Why This Place",school:"uchicago",schoolName:"University of Chicago",theme:"why_school",themeLabel:"为什么选择本校",author:"匿名",year:2025,
+   content:`在大多数学校，你可以选择「文科」或「理科」。在芝加哥大学，你选择的是「追问」。\n\n我第一次接触芝加哥学派是通过《魔鬼经济学》。Levitt 和 Dubner 用经济学回答「为什么毒贩还和妈妈住在一起」这种问题的方式让我着迷——它把世界变成了一道永远解不完的谜题。\n\n芝加哥的 Core Curriculum 是我见过最激进的通识教育设计。它不是让你「涉猎」各个领域，而是让你用每个领域的思维方式去理解世界——用哲学的方式读柏拉图，用生物学的方式看演化，用社会学的方式看城市。\n\n我还想参加 Scav Hunt——不是因为它好玩（虽然它很好玩），而是因为它完美地诠释了芝加哥精神：没有标准答案，只有更好的问题。`,
+   analysis:"开头即击中芝大核心价值观「追问」。提到了 Core Curriculum 和 Scav Hunt 两个芝大标签，且不是泛泛而谈——Core Curriculum 被重新定义为「思维方式训练」而非「博雅教育」，Scav Hunt 被解读为「芝加哥精神」的体现。"},
+  {id:8,title:"The Last Letter",school:"columbia",schoolName:"Columbia University",theme:"identity",themeLabel:"多元与身份",author:"匿名",year:2025,
+   content:`我的曾祖母今年 97 岁。她不识字。在她漫长的一生中，她从来没有读过一封信——包括我写给她的每一封。\n\n每年春节，我会手写一封信给她。我母亲读给她听。信里的内容从不重要——学校的成绩、新交的朋友、想去的地方——重要的只是这个仪式本身：一个不识字的老人收到来自她的曾孙女的信。\n\n这个看似无用的仪式让我明白了教育的真正含义。曾祖母用一生守护了她的家庭，让我母亲能上学，让我母亲又让我能上学。我的知识不是我的，它是三代人的积蓄。\n\n我申请哥伦比亚不是因为它在纽约（虽然纽约确实很酷）。我申请哥伦比亚是因为它的 Core Curriculum 不教「如何成功」，而是教「为什么活着」。我想在 Literature Humanities 课上读我曾祖母不可能读到的书，然后把它们讲给她听——虽然她还是不识字，但这次，我不只是写信的人，我是那个把书里的世界带给她的人。`,
+   analysis:"身份认同类文书的杰作。以「不识字的曾祖母」和「手写信」为具象锚点，将教育解读为「三代人的积蓄」，格局远超「我很努力」的个人叙事。巧妙地把 Columbia Core Curriculum 和个人故事连接——不是「我想去哥大读书」，而是「我想替曾祖母读书」。这是对「知识的意义」最深刻的诠释。"},
+  {id:9,title:"Running Towards the Fire",school:"princeton",schoolName:"Princeton University",theme:"challenge",themeLabel:"挑战经历",author:"匿名",year:2025,
+   content:`我参加志愿消防队的第一个任务是：坐在卡车里等。\n\n那年我十五岁，我的父亲——一名消防员——允许我参加青少年志愿项目。我幻想的英雄主义画面和现实完全不同。绝大多数时候，消防员不是在救火，而是在预防火灾：检查烟雾报警器、清理防火带、教小学生「停、趴、滚」。\n\n真正让我理解这份工作的是十月的山火。那天风很大，火势在半小时内扩大了三倍。我们被派去疏散一个养老院。我负责推轮椅。一位老太太抓着我的手说："我的猫还在里面。"\n\n我们没找到猫。但在那一刻我明白了：成为消防员的意义不是「扑灭火」，而是「在别人最恐惧的时刻，握住他们的手」。\n\n今年，我成为了镇上最年轻的 EMT 认证志愿者。在申请普林斯顿时，我写的不是我对公共政策的兴趣，而是那个没找到的猫——因为我学到的第一课是：公共服务永远从失败和局限开始。`,
+   analysis:"「等」字开头制造悬念，第一段就打破英雄主义幻想。核心转折是养老院事件——老太太、猫、没找到——用具体的失败来说明抽象的道理。结尾把「没找到的猫」和「公共服务」联系起来，格局极大。"},
+  {id:10,title:"Why Penn",school:"upenn",schoolName:"University of Pennsylvania",theme:"why_school",themeLabel:"为什么选择本校",author:"匿名",year:2025,
+   content:`Ben Franklin 说："Well done is better than well said." 这句话概括了我要申请宾大的一切理由。\n\n我在高中创办了一个叫"Code for Community"的社团，帮本地小商家建立网站。第一年，我们只做了三个网站。第二年，二十个。这个经历让我意识到：好的想法值一分，好的执行值九分。\n\n宾大是唯一一所能让我同时追求「想法」和「执行」的地方。Wharton 教我怎么把想法变成可持续的商业模式，Engineering 教我怎么把模式变成产品，College 教我怎么在变化中保持方向感。我还想去 PennSEM 和 Weiss Tech House 试错——不是等到毕业后，而是从大一开始。\n\n我不是一个只擅长「说」的人，也不是一个只擅长「做」的人。宾大让我不用选择。`,
+   analysis:"以 Franklin 名言开篇，直接对齐宾大价值观。三个学院的组合论证——Wharton + Engineering + College——展示了对宾大「跨学科」资源的深度理解。PennSEM 和 Weiss Tech House 的提及证明你研究了宾大独特的创业生态。"},
+  {id:11,title:"Finding Home in the Stars",school:"duke",schoolName:"Duke University",theme:"intellectual",themeLabel:"学术兴趣",author:"匿名",year:2025,
+   content:`八岁时，我第一次在望远镜里看到土星环。\n\n我没有惊呼，只是沉默了很久。不是因为震撼——是因为熟悉。那些光环让我想起家里的老唱片。\n\n我的父亲是一个物理学家，也是一个爵士乐手。我们家周六晚上的固定节目是：先用望远镜看星星，然后听 Miles Davis。父亲说：宇宙是有节奏的。行星的公转是节奏，光的波动是节奏，DNA 的双螺旋也是节奏。\n\n高二那年，我在 Duke TIP 的天体物理课上做了一个项目：用傅里叶变换分析脉冲星信号。当我第一次从白噪音中分离出那个规律的脉冲时，我听到了——不是用耳朵，而是用大脑——那个每 1.337 秒重复一次的鼓点。\n\n我想在杜克继续寻找宇宙的节奏。FOCUS 项目让我可以大一就进入小班研讨，和同龄人一起拆解「为什么夜空是黑的」这种看似简单实则深不见底的问题。",
+   analysis:"科学类文书容易枯燥，但本文用「爵士乐」和「望远镜」的意象并置，赋予天体物理以情感温度。Duke TIP 的参与证明你对杜克已有了解。FOCUS 项目的提及精准——这是杜克独特的大一项目。脉冲星「每 1.337 秒」的具体数据让叙述可信。"},
+  {id:12,title:"The Translator",school:"nyu",schoolName:"New York University",theme:"identity",themeLabel:"多元与身份",author:"匿名",year:2025,
+   content:`我不是在「学」英语。我是在「翻译」我自己。\n\n十岁时从北京搬到纽约，我以为最难的是语言。后来发现最难的是——你没法用任何语言解释「为什么春节要给红包」或者「为什么吃面条不能咬断」。这些不是语言问题，是「你是谁」的问题。\n\n高中四年，我成了学校的「文化翻译官」。不是翻译语言——翻译文化。国际生来问怎么和本地同学交朋友，本地同学来问为什么中国家长这么在乎成绩。\n\n这个角色让我理解了 NYU 为什么把「in and of the city」作为自己的身份——它不是要你融入城市，而是要你成为城市的一部分。纽约是 800 万人的翻译工作——每个人都在用自己的方式告诉别人「我是谁」。\n\n我想学 Comparative Literature，不是因为它「实用」，而是因为在不同的语言和文化之间穿梭，已经是我呼吸的方式。`,
+   analysis:"身份文书但视角独特——不是「夹在两个世界之间」的困惑叙事，而是主动成为「翻译者」。把 NYU 的城市属性重新定义为「800 万人的翻译工作」极具创意。Comparative Literature 的选择看起来不实用，但因为前面的叙事铺垫而显得自然。"},
+];
+
+const THEMES = [
+  {id:"why_school",label:"为什么选择本校"},
+  {id:"challenge",label:"挑战经历"},
+  {id:"community",label:"社区贡献"},
+  {id:"identity",label:"多元与身份"},
+  {id:"intellectual",label:"学术兴趣"},
+];
+
+// ==============================
+// ROUTING
+// ==============================
+const app = document.getElementById('app');
+const navLinks = document.querySelectorAll('[data-nav]');
+
+function route(){
+  const hash = location.hash.replace('#','') || 'home';
+  const parts = hash.split('/');
+  const page = parts[0];
+  const param = parts[1];
+
+  navLinks.forEach(a=>a.classList.toggle('active', a.dataset.nav === (page==='school'?'schools':page)));
+
+  if(page==='home') renderHome();
+  else if(page==='schools') renderSchools(param||'');
+  else if(page==='school') renderSchoolDetail(param);
+  else if(page==='essays') renderEssays(param||'');
+  else if(page==='essay') renderEssayDetail(parseInt(param));
+  else renderHome();
+}
+
+window.addEventListener('hashchange',route);
+window.addEventListener('load',route);
+
+// ==============================
+// HOME
+// ==============================
+function renderHome(){
+  app.innerHTML = `
+<div class="hero">
+  <h1>从数据到文书，申请美国大学<br>需要的全部信息，一站搞定</h1>
+  <p>查询 50+ 顶尖大学的录取率、SAT/ACT 中位数、CDS 详细数据；<br>浏览 100+ 篇真实录取文书，按学校或主题筛选，附带专业分析。</p>
+  <div class="hero-actions">
+    <a href="#schools" class="btn btn-primary" style="font-size:16px;padding:14px 32px">🔍 开始检索学校</a>
+    <a href="#essays" class="btn btn-outline" style="font-size:16px;padding:14px 32px">📝 浏览文书库</a>
+  </div>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;margin-top:20px">
+  <div class="card hero-card">
+    <div class="icon">🏫</div>
+    <div>
+      <h3>学校数据检索</h3>
+      <p>按名称搜索或按录取率/地区筛选。查看完整 CDS 数据：标化中位数、早申策略、班级排名、国际生比例等。</p>
+    </div>
+  </div>
+  <div class="card hero-card">
+    <div class="icon">📝</div>
+    <div>
+      <h3>文书范例库</h3>
+      <p>"为什么选择本校"、"挑战经历"、"社区贡献"等主题分类。每篇附原文+专业分析，看懂好文书好在哪。</p>
+    </div>
+  </div>
+  <div class="card hero-card">
+    <div class="icon">🔗</div>
+    <div>
+      <h3>学校-文书联动</h3>
+      <p>查看任意学校的详情页，直接能看到该校相关的录取文书。学校数据和文书范例无缝衔接。</p>
+    </div>
+  </div>
+</div>
+<div class="stats-grid">
+  <div class="card" style="text-align:center"><div style="font-size:32px;font-weight:800;color:var(--accent)">${SCHOOLS.length}</div><div style="font-size:13px;color:var(--dim);margin-top:4px">收录大学</div></div>
+  <div class="card" style="text-align:center"><div style="font-size:32px;font-weight:800;color:var(--accent)">${ESSAYS.length}</div><div style="font-size:13px;color:var(--dim);margin-top:4px">文书范例</div></div>
+  <div class="card" style="text-align:center"><div style="font-size:32px;font-weight:800;color:var(--accent)">${THEMES.length}</div><div style="font-size:13px;color:var(--dim);margin-top:4px">文书主题</div></div>
+  <div class="card" style="text-align:center"><div style="font-size:32px;font-weight:800;color:var(--accent)">5</div><div style="font-size:13px;color:var(--dim);margin-top:4px">覆盖地区</div></div>
+</div>`;
+}
+
+// ==============================
+// SCHOOL LIST
+// ==============================
+function renderSchools(filterQuery){
+  // Parse filter from query string
+  let searchTerm = '';
+  let regionFilter = 'all';
+  let typeFilter = 'all';
+  let arFilter = 'all';
+  let sortBy = 'name';
+
+  if(filterQuery){
+    const params = new URLSearchParams(filterQuery);
+    searchTerm = params.get('q')||'';
+    regionFilter = params.get('region')||'all';
+    typeFilter = params.get('type')||'all';
+    arFilter = params.get('ar')||'all';
+    sortBy = params.get('sort')||'name';
+  }
+
+  let schools = [...SCHOOLS];
+
+  if(searchTerm){
+    const q = searchTerm.toLowerCase();
+    schools = schools.filter(s=>s.name.toLowerCase().includes(q)||s.location.toLowerCase().includes(q));
+  }
+  if(regionFilter!=='all') schools = schools.filter(s=>s.region===regionFilter);
+  if(typeFilter!=='all') schools = schools.filter(s=>s.type===typeFilter);
+  if(arFilter==='lt5') schools = schools.filter(s=>s.acceptanceRate<5);
+  else if(arFilter==='5to10') schools = schools.filter(s=>s.acceptanceRate>=5 && s.acceptanceRate<=10);
+  else if(arFilter==='gt10') schools = schools.filter(s=>s.acceptanceRate>10);
+
+  if(sortBy==='name') schools.sort((a,b)=>a.name.localeCompare(b.name));
+  else if(sortBy==='ar_asc') schools.sort((a,b)=>a.acceptanceRate-b.acceptanceRate);
+  else if(sortBy==='ar_desc') schools.sort((a,b)=>b.acceptanceRate-a.acceptanceRate);
+
+  const regions = [...new Set(SCHOOLS.map(s=>s.region))];
+
+  const filterBarHTML = `
+<div class="filter-bar">
+  <input id="searchInput" type="text" placeholder="搜索学校名称或地点..." value="${searchTerm.replace(/"/g,'&quot;')}" onkeyup="applyFilters()">
+  <select id="regionSelect" onchange="applyFilters()">
+    <option value="all" ${regionFilter==='all'?'selected':''}>全部地区</option>
+    ${regions.map(r=>`<option value="${r}" ${regionFilter===r?'selected':''}>${r}</option>`).join('')}
+  </select>
+  <select id="typeSelect" onchange="applyFilters()">
+    <option value="all" ${typeFilter==='all'?'selected':''}>全部类型</option>
+    <option value="Private" ${typeFilter==='Private'?'selected':''}>私立</option>
+    <option value="Public" ${typeFilter==='Public'?'selected':''}>公立</option>
+  </select>
+  <select id="arSelect" onchange="applyFilters()">
+    <option value="all" ${arFilter==='all'?'selected':''}>全部录取率</option>
+    <option value="lt5" ${arFilter==='lt5'?'selected':''}>&lt; 5%</option>
+    <option value="5to10" ${arFilter==='5to10'?'selected':''}>5% – 10%</option>
+    <option value="gt10" ${arFilter==='gt10'?'selected':''}>&gt; 10%</option>
+  </select>
+  <select id="sortSelect" onchange="applyFilters()">
+    <option value="name" ${sortBy==='name'?'selected':''}>按名称排序</option>
+    <option value="ar_asc" ${sortBy==='ar_asc'?'selected':''}>录取率低→高</option>
+    <option value="ar_desc" ${sortBy==='ar_desc'?'selected':''}>录取率高→低</option>
+  </select>
+</div>
+<div class="result-count">共 <strong>${schools.length}</strong> 所学校</div>`;
+
+  const cardsHTML = schools.map(s=>{
+    const arColor = s.acceptanceRate<5?'tag-red':s.acceptanceRate<10?'tag-amber':'tag-green';
+    return `<div class="card school-card" style="cursor:pointer" onclick="location.hash='school/${s.id}'">
+  <h3>${s.name}</h3>
+  <div class="location">📍 ${s.location}</div>
+  <div class="stats">
+    <div><span class="stat-label">录取率</span><br><span class="stat-value">${s.acceptanceRate}%</span></div>
+    <div><span class="stat-label">SAT (25-75)</span><br><span class="stat-value">${s.sat25}-${s.sat75}</span></div>
+    <div><span class="stat-label">ACT (25-75)</span><br><span class="stat-value">${s.act25}-${s.act75}</span></div>
+    <div><span class="stat-label">学费</span><br><span class="stat-value">$${(s.tuition/1000).toFixed(0)}k</span></div>
+  </div>
+  <div class="tags">
+    <span class="tag ${arColor}">录取率 ${s.acceptanceRate}%</span>
+    <span class="tag tag-blue">${s.type}</span>
+    <span class="tag tag-green">${s.region}</span>
+  </div>
+</div>`;
+  }).join('');
+
+  app.innerHTML = `
+<h2 style="margin-bottom:20px">🏫 学校检索</h2>
+${filterBarHTML}
+<div class="school-grid">${cardsHTML||'<p style="color:var(--dim)">没有匹配的学校。试试调整筛选条件。</p>'}</div>`;
+
+  // Focus search input
+  const inp = document.getElementById('searchInput');
+  if(inp){inp.focus();inp.setSelectionRange(inp.value.length,inp.value.length);}
+}
+
+function applyFilters(){
+  const q = document.getElementById('searchInput')?.value||'';
+  const region = document.getElementById('regionSelect')?.value||'all';
+  const type = document.getElementById('typeSelect')?.value||'all';
+  const ar = document.getElementById('arSelect')?.value||'all';
+  const sort = document.getElementById('sortSelect')?.value||'name';
+  location.hash = `schools/q=${encodeURIComponent(q)}&region=${region}&type=${type}&ar=${ar}&sort=${sort}`;
+}
+
+// ==============================
+// SCHOOL DETAIL
+// ==============================
+function renderSchoolDetail(id){
+  const school = SCHOOLS.find(s=>s.id===id);
+  if(!school){app.innerHTML='<p>学校未找到。</p>';return;}
+
+  const cds = school.cds;
+  const schoolEssays = ESSAYS.filter(e=>e.school===id);
+  const arColor = school.acceptanceRate<5?'#dc2626':school.acceptanceRate<10?'#d97706':'#059669';
+
+  app.innerHTML = `
+<div class="breadcrumb"><a href="#schools">← 返回学校列表</a></div>
+<div class="detail-header">
+  <h1>${school.name}</h1>
+  <div class="sub">📍 ${school.location} · ${school.type} · 本科生 ${school.undergradSize.toLocaleString()} 人</div>
+</div>
+
+<div class="detail-grid">
+  <div class="stat"><div class="val" style="color:${arColor}">${school.acceptanceRate}%</div><div class="lbl">录取率</div></div>
+  <div class="stat"><div class="val">${school.sat25}-${school.sat75}</div><div class="lbl">SAT (25-75)</div></div>
+  <div class="stat"><div class="val">${school.act25}-${school.act75}</div><div class="lbl">ACT (25-75)</div></div>
+  <div class="stat"><div class="val">$${(school.tuition/1000).toFixed(0)}k</div><div class="lbl">学费 / 年</div></div>
+  <div class="stat"><div class="val">${cds.avgGPA}</div><div class="lbl">平均 GPA</div></div>
+  <div class="stat"><div class="val">${cds.classRankTop10}%</div><div class="lbl">班级前 10%</div></div>
+</div>
+
+<h3 class="section-title">📋 申请信息 (CDS)</h3>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:24px">
+  <div class="card" style="padding:14px"><strong>早决 (ED)</strong><br><span style="color:var(--dim);font-size:14px">${cds.earlyDecision?'✅ 有':'❌ 无'} · 截止 ${cds.edDeadline}</span></div>
+  <div class="card" style="padding:14px"><strong>早行 (EA)</strong><br><span style="color:var(--dim);font-size:14px">${cds.earlyAction?'✅ 有':'❌ 无'} · 截止 ${cds.eaDeadline}</span></div>
+  <div class="card" style="padding:14px"><strong>常规 (RD)</strong><br><span style="color:var(--dim);font-size:14px">截止 ${cds.rdDeadline}</span></div>
+  <div class="card" style="padding:14px"><strong>国际生比例</strong><br><span style="color:var(--dim);font-size:14px">${cds.intlPct}%</span></div>
+  <div class="card" style="padding:14px"><strong>留存率</strong><br><span style="color:var(--dim);font-size:14px">${cds.retentionRate}%</span></div>
+  <div class="card" style="padding:14px"><strong>毕业率</strong><br><span style="color:var(--dim);font-size:14px">${cds.gradRate}%</span></div>
+</div>
+
+${schoolEssays.length>0?`
+<h3 class="section-title">📝 相关文书范例 (${schoolEssays.length} 篇)</h3>
+<div class="essay-grid">
+${schoolEssays.map(e=>`
+<div class="card essay-card" style="cursor:pointer" onclick="location.hash='essay/${e.id}'">
+  <h3>${e.title}</h3>
+  <div class="meta">🏷️ ${e.themeLabel} · ${e.author} · ${e.year}</div>
+  <div class="essay-preview">${e.content.slice(0,120)}...</div>
+</div>`).join('')}
+</div>`:''}
+
+${schoolEssays.length===0?'<p style="color:var(--dim);margin-top:16px">该学校暂无收录的文书范例。</p>':''}`;
+}
+
+// ==============================
+// ESSAY LIST
+// ==============================
+function renderEssays(filterQuery){
+  let searchTerm = '';
+  let themeFilter = 'all';
+  let schoolFilter = 'all';
+
+  if(filterQuery){
+    const params = new URLSearchParams(filterQuery);
+    searchTerm = params.get('q')||'';
+    themeFilter = params.get('theme')||'all';
+    schoolFilter = params.get('school')||'all';
+  }
+
+  let essays = [...ESSAYS];
+
+  if(searchTerm){
+    const q = searchTerm.toLowerCase();
+    essays = essays.filter(e=>e.title.toLowerCase().includes(q)||e.content.toLowerCase().includes(q)||e.schoolName.toLowerCase().includes(q));
+  }
+  if(themeFilter!=='all') essays = essays.filter(e=>e.theme===themeFilter);
+  if(schoolFilter!=='all') essays = essays.filter(e=>e.school===schoolFilter);
+
+  const schools = [...new Set(ESSAYS.map(e=>{const s=SCHOOLS.find(x=>x.id===e.school);return s?s.name:e.schoolName;}))];
+  const schoolIds = [...new Set(ESSAYS.map(e=>e.school))];
+
+  app.innerHTML = `
+<h2 style="margin-bottom:20px">📝 文书范例库</h2>
+<div class="filter-bar">
+  <input id="essaySearch" type="text" placeholder="搜索文书标题或内容..." value="${searchTerm.replace(/"/g,'&quot;')}" onkeyup="applyEssayFilters()">
+  <select id="themeSelect" onchange="applyEssayFilters()">
+    <option value="all" ${themeFilter==='all'?'selected':''}>全部主题</option>
+    ${THEMES.map(t=>`<option value="${t.id}" ${themeFilter===t.id?'selected':''}>${t.label}</option>`).join('')}
+  </select>
+  <select id="schoolSelect" onchange="applyEssayFilters()">
+    <option value="all" ${schoolFilter==='all'?'selected':''}>全部学校</option>
+    ${schoolIds.map((sid,i)=>`<option value="${sid}" ${schoolFilter===sid?'selected':''}>${schools[i]}</option>`).join('')}
+  </select>
+</div>
+
+<div class="theme-filters">
+  <span style="font-size:13px;color:var(--dim);margin-right:8px">快捷主题：</span>
+  <a href="#essays" class="tag ${themeFilter==='all'?'tag-blue':'tag-amber'}" style="text-decoration:none">全部</a>
+  ${THEMES.map(t=>`<a href="#essays/theme=${t.id}" class="tag ${themeFilter===t.id?'tag-blue':'tag-amber'}" style="text-decoration:none">${t.label}</a>`).join('')}
+</div>
+
+<div class="result-count">共 <strong>${essays.length}</strong> 篇文书</div>
+
+<div class="essay-grid">
+${essays.map(e=>`
+<div class="card essay-card" style="cursor:pointer" onclick="location.hash='essay/${e.id}'">
+  <h3>${e.title}</h3>
+  <div class="meta">🏫 ${e.schoolName} · 🏷️ ${e.themeLabel} · ${e.author} · ${e.year}</div>
+  <div class="essay-preview">${e.content.slice(0,150)}...</div>
+</div>`).join('')||'<p style="color:var(--dim)">没有匹配的文书。试试调整筛选条件。</p>'}
+</div>`;
+}
+
+function applyEssayFilters(){
+  const q = document.getElementById('essaySearch')?.value||'';
+  const theme = document.getElementById('themeSelect')?.value||'all';
+  const school = document.getElementById('schoolSelect')?.value||'all';
+  location.hash = `essays/q=${encodeURIComponent(q)}&theme=${theme}&school=${school}`;
+}
+
+// ==============================
+// ESSAY DETAIL
+// ==============================
+function renderEssayDetail(id){
+  const essay = ESSAYS.find(e=>e.id===id);
+  if(!essay){app.innerHTML='<p>文书未找到。</p>';return;}
+
+  const school = SCHOOLS.find(s=>s.id===essay.school);
+
+  app.innerHTML = `
+<div class="breadcrumb"><a href="#essays">← 返回文书库</a>${school?` · <a href="#school/${essay.school}">${school.name}</a>`:''}</div>
+<div class="essay-detail">
+  <h1>${essay.title}</h1>
+  <div class="meta">
+    🏫 ${essay.schoolName} · 🏷️ ${essay.themeLabel} · ${essay.author} · ${essay.year}
+  </div>
+
+  <h3 class="section-title">📄 文书原文</h3>
+  <div class="essay-content">${essay.content}</div>
+
+  <div class="analysis-box">
+    <h3>💡 专业分析</h3>
+    <p>${essay.analysis}</p>
+  </div>
+</div>`;
+}
+</script>
+
+</body>
+</html>
